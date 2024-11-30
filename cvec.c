@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-CVec* cvec_new() {
+CVec* cvec_new(void) {
     CVec* cvec = malloc(sizeof(CVec));
 
     cvec->arr = malloc(ARRAY_START_LEN * sizeof(int));

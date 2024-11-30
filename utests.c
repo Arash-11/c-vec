@@ -2,7 +2,7 @@
 #include <assert.h>
 #include <stdio.h>
 
-int main() {
+int main(void) {
     CVec* cvec = cvec_new();
 
     cvec_push(cvec, 7);

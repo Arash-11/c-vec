@@ -12,7 +12,7 @@ typedef struct CVec {
     int curr_index;
 } CVec;
 
-CVec* cvec_new();
+CVec* cvec_new(void);
 void cvec_push(CVec* cvec, int val);
 int cvec_pop(CVec* cvec);
 int cvec_at(CVec* cvec, int index);
