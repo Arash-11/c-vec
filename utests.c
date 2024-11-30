@@ -1,6 +1,6 @@
-#include <stdio.h>
-
 #include "cvec.h"
+#include <assert.h>
+#include <stdio.h>
 
 int main() {
     CVec* cvec = cvec_new();

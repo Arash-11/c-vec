@@ -1,8 +1,7 @@
+#include "cvec.h"
+#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <assert.h>
-
-#include "cvec.h"
 
 CVec* cvec_new() {
     CVec* cvec = malloc(sizeof(CVec));
