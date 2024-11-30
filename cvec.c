@@ -1,38 +1,73 @@
 #include "cvec.h"
-#include <assert.h>
-#include <stdio.h>
 #include <stdlib.h>
 
 CVec* cvec_new(void) {
     CVec* cvec = malloc(sizeof(CVec));
-
-    cvec->arr = malloc(ARRAY_START_LEN * sizeof(int));
-    cvec->len = ARRAY_START_LEN;
+    cvec->arr = malloc(ARRAY_START_CAP * sizeof(int));
+    cvec->cap = ARRAY_START_CAP;
     cvec->curr_index = 0;
-
     return cvec;
 }
 
-void cvec_push(CVec* cvec, int val) {
+void cvec_free(CVec* cvec) {
+    free(cvec->arr);
+    cvec->cap = 0;
+    cvec->curr_index = 0;
+    free(cvec);
+}
+
+Result cvec_push(CVec* cvec, int val) {
+    Result res;
     int target_index = cvec->curr_index;
-    assert(target_index >= 0);
+
+    if (target_index < 0 || target_index >= cvec->cap) {
+        res.status = ERROR;
+        res.val = 0;
+        return res;
+    }
+
     cvec->arr[target_index] = val;
     cvec->curr_index++;
+
+    res.status = OK;
+    res.val = val;
+    return res;
 }
 
-int cvec_pop(CVec* cvec) {
-    int target_index = --cvec->curr_index;
-    assert(target_index >= 0);
+Result cvec_pop(CVec* cvec) {
+    Result res;
+    int target_index = cvec->curr_index - 1;
+
+    if (target_index < 0) {
+        res.status = ERROR;
+        res.val = 0;
+        return res;
+    }
+
     int val = cvec->arr[target_index];
     cvec->arr[target_index] = 0;
-    return val;
+    cvec->curr_index--;
+
+    res.status = OK;
+    res.val = val;
+    return res;
 }
 
-int cvec_at(CVec* cvec, int index) {
-    int target_index = cvec->curr_index - 1;
-    // return out-of-bounds error perhaps?
-    assert(index <= target_index);
-    return cvec->arr[target_index];
+Result cvec_at(const CVec* cvec, int index) {
+    Result res;
+    int last_index = cvec->curr_index - 1;
+
+    if (index < 0 || index > last_index) {
+        res.status = ERROR;
+        res.val = 0;
+        return res;
+    }
+
+    int val = cvec->arr[index];
+
+    res.status = OK;
+    res.val = val;
+    return res;
 }
 
 size_t cvec_len(const CVec* cvec) {
