@@ -35,11 +35,13 @@ void test_cvec_push(void) {
     assert(got[2] == base[2]);
     assert(got[3] == base[3]);
 
+    // resizing
     Result res_4 = cvec_push(cvec, 19);
     Result res_5 = cvec_push(cvec, 111);
 
-    assert(res_4.status == ERROR && res_4.val == 0);
-    assert(res_5.status == ERROR && res_5.val == 0);
+    assert(res_4.status == OK && res_4.val == 19);
+    assert(res_5.status == OK && res_5.val == 111);
+    assert(cvec->cap == ARRAY_START_CAP * 2);
 
     cvec_free(cvec);
 

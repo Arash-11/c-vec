@@ -1,5 +1,17 @@
 #include "cvec.h"
 #include <stdlib.h>
+#include <string.h>
+
+void resize(CVec* cvec) {
+    int* curr_arr = cvec->arr;
+    // todo: what alternatives are there to doubling?
+    int new_cap = cvec->cap * 2; // Double the capacity
+    int* new_arr = malloc(new_cap * sizeof(int));
+    memcpy(new_arr, curr_arr, cvec->cap * sizeof(int));
+    free(cvec->arr);
+    cvec->arr = new_arr;
+    cvec->cap = new_cap;
+}
 
 CVec* cvec_new(void) {
     CVec* cvec = malloc(sizeof(CVec));
@@ -20,11 +32,13 @@ Result cvec_push(CVec* cvec, int val) {
     Result res;
     int target_index = cvec->curr_index;
 
-    if (target_index < 0 || target_index >= cvec->cap) {
+    if (target_index < 0) {
         res.status = ERROR;
         res.val = 0;
         return res;
     }
+
+    if (target_index >= cvec->cap) resize(cvec);
 
     cvec->arr[target_index] = val;
     cvec->curr_index++;
