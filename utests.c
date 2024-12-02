@@ -1,5 +1,6 @@
 #include "cvec.h"
 #include <assert.h>
+#include <limits.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -78,6 +79,14 @@ void test_cvec_pop(void) {
     assert(res_4.status == ERROR && res_4.val == 0);
     assert(res_5.status == ERROR && res_5.val == 0);
 
+    // test pop after insert
+    cvec_insert(cvec, 711, 19);
+    Result res_6 = cvec_pop(cvec);
+    size_t res_len = cvec_len(cvec);
+
+    assert(res_6.status == OK && res_6.val == 19);
+    assert(res_len == 711);
+
     cvec_free(cvec);
 
     printf("[OK] test_cvec_pop\n");
@@ -134,13 +143,54 @@ void test_cvec_free(void) {
     printf("[OK] test_cvec_free\n");
 }
 
+void test_cvec_insert(void) {
+    int base[] = {7, 11, 10, 9};
+
+    CVec* cvec = cvec_new();
+    cvec_push(cvec, base[0]);
+    cvec_push(cvec, base[1]);
+    Result res_0 = cvec_insert(cvec, 5, base[2]);
+    Result res_1 = cvec_at(cvec, 5);
+
+    assert(res_0.status == OK && res_0.val == base[2]);
+    assert(res_1.status == OK && res_1.val == base[2]);
+
+    Result res_2 = cvec_insert(cvec, 500, base[3]);
+    Result res_3 = cvec_at(cvec, 500);
+
+    assert(res_2.status == OK && res_2.val == base[3]);
+    assert(res_3.status == OK && res_3.val == base[3]);
+
+    Result res_4 = cvec_insert(cvec, 711, 19);
+    Result res_5 = cvec_at(cvec, 711);
+
+    assert(res_4.status == OK && res_4.val == 19);
+    assert(res_5.status == OK && res_5.val == 19);
+
+    Result res_6 = cvec_insert(cvec, INT_MAX - 1, 1);
+    Result res_7 = cvec_at(cvec, INT_MAX - 1);
+
+    assert(res_6.status == ERROR && res_6.val == 0);
+    assert(res_7.status == ERROR && res_7.val == 0);
+
+    Result res_8 = cvec_insert(cvec, INT_MAX, 6);
+    Result res_9 = cvec_at(cvec, INT_MAX);
+
+    assert(res_8.status == ERROR && res_8.val == 0);
+    assert(res_9.status == ERROR && res_9.val == 0);
+
+    cvec_free(cvec);
+
+    printf("[OK] test_cvec_insert\n");
+}
+
 int main(void) {
-	test_cvec_new();
+    test_cvec_new();
     test_cvec_push();
     test_cvec_pop();
     test_cvec_at();
     test_cvec_len();
     test_cvec_free();
-
+    test_cvec_insert();
     return 0;
 }
