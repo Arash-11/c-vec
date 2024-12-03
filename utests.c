@@ -5,8 +5,10 @@
 #include <string.h>
 
 void test_cvec_new(void) {
-    CVec* cvec = cvec_new();
+    CVec* cvec;
+    Result res = cvec_new(&cvec);
 
+    assert(res.status == OK && res.val == 0);
     assert(cvec->arr != NULL);
     assert(cvec->cap == ARRAY_START_CAP);
     assert(cvec->curr_index == 0);
@@ -20,7 +22,8 @@ void test_cvec_push(void) {
     int base[] = {7, 11, 10, 9};
     int got[ARRAY_START_CAP];
 
-    CVec* cvec = cvec_new();
+    CVec* cvec;
+    cvec_new(&cvec);
     Result res_0 = cvec_push(cvec, base[0]);
     Result res_1 = cvec_push(cvec, base[1]);
     Result res_2 = cvec_push(cvec, base[2]);
@@ -53,7 +56,8 @@ void test_cvec_pop(void) {
     int base[] = {7, 11, 10, 9};
     int got[ARRAY_START_CAP];
 
-    CVec* cvec = cvec_new();
+    CVec* cvec;
+    cvec_new(&cvec);
     cvec_push(cvec, base[0]);
     cvec_push(cvec, base[1]);
     cvec_push(cvec, base[2]);
@@ -95,7 +99,8 @@ void test_cvec_pop(void) {
 void test_cvec_at(void) {
     int base[] = {7, 11, 10, 9};
 
-    CVec* cvec = cvec_new();
+    CVec* cvec;
+    cvec_new(&cvec);
     cvec_push(cvec, base[0]);
     cvec_push(cvec, base[1]);
     Result res_0 = cvec_at(cvec, 0);
@@ -114,7 +119,8 @@ void test_cvec_at(void) {
 void test_cvec_len(void) {
     int base[] = {7, 11, 10, 9};
 
-    CVec* cvec = cvec_new();
+    CVec* cvec;
+    cvec_new(&cvec);
     cvec_push(cvec, base[0]);
     cvec_push(cvec, base[1]);
     cvec_push(cvec, base[2]);
@@ -131,7 +137,8 @@ void test_cvec_len(void) {
 }
 
 void test_cvec_free(void) {
-    CVec* cvec = cvec_new();
+    CVec* cvec;
+    cvec_new(&cvec);
     cvec_push(cvec, 7);
     cvec_push(cvec, 11);
     cvec_free(cvec);
@@ -146,7 +153,8 @@ void test_cvec_free(void) {
 void test_cvec_insert(void) {
     int base[] = {7, 11, 10, 9};
 
-    CVec* cvec = cvec_new();
+    CVec* cvec;
+    cvec_new(&cvec);
     cvec_push(cvec, base[0]);
     cvec_push(cvec, base[1]);
     Result res_0 = cvec_insert(cvec, 5, base[2]);

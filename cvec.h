@@ -21,9 +21,8 @@ typedef struct {
     int curr_index;
 } CVec;
 
-// todo: all other functions take in a `CVec*`,
-// should `cvec_new` do the same?
-CVec* cvec_new(void);
+// Take CVec** as an arg to allow for return of Result for error handling
+Result cvec_new(CVec** cvec);
 void cvec_free(CVec* cvec);
 Result cvec_push(CVec* cvec, int val);
 Result cvec_pop(CVec* cvec);

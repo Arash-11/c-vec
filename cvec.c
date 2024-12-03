@@ -47,12 +47,30 @@ Result resize(CVec* cvec, int slots_num) {
     return res;
 }
 
-CVec* cvec_new(void) {
-    CVec* cvec = malloc(sizeof(CVec));
-    cvec->arr = malloc(ARRAY_START_CAP * sizeof(int));
-    cvec->cap = ARRAY_START_CAP;
-    cvec->curr_index = 0;
-    return cvec;
+Result cvec_new(CVec** cvec) {
+    Result res;
+
+    *cvec = malloc(sizeof(CVec));
+    if (!cvec) {
+        res.status = ERROR;
+        res.val = 0;
+        return res;
+    }
+
+    (*cvec)->arr = malloc(ARRAY_START_CAP * sizeof(int));
+    if (!(*cvec)->arr) {
+        free((*cvec));
+        res.status = ERROR;
+        res.val = 0;
+        return res;
+    }
+
+    (*cvec)->cap = ARRAY_START_CAP;
+    (*cvec)->curr_index = 0;
+
+    res.status = OK;
+    res.val = 0;
+    return res;
 }
 
 void cvec_free(CVec* cvec) {
