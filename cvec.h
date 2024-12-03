@@ -5,18 +5,6 @@
 
 #define ARRAY_START_CAP 4
 
-// Ugh can't use this with -Wpedantic.
-// https://stackoverflow.com/a/58532788
-// Use GCC statement expressions with type safety
-// https://gcc.gnu.org/onlinedocs/gcc/Statement-Exprs.html#Statement-Exprs
-// #define max(a,b)             \
-// ({                           \
-//     __typeof__ (a) _a = (a); \
-//     __typeof__ (b) _b = (b); \
-//     _a > _b ? _a : _b;       \
-// })
-#define MAX(a,b) ((a) > (b) ? (a) : (b))
-
 typedef enum RetStatus {
     ERROR = -1,
     OK

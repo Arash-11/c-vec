@@ -4,6 +4,9 @@
 #include <stdlib.h>
 #include <string.h>
 
+// https://en.wikipedia.org/wiki/Dynamic_array#Growth_factor
+#define GROWTH_FACTOR 2
+
 Result resize(CVec* cvec, int slots_num) {
     Result res;
 
@@ -13,21 +16,29 @@ Result resize(CVec* cvec, int slots_num) {
         return res;
     }
 
-    // todo: what alternatives are there to doubling?
-    // Double the capacity
-    int new_cap = cvec->cap * (int)(ceil((double)(slots_num) / cvec->cap)) * 2;
+    int growth_multiplier = (int)ceil((double)(slots_num) / cvec->cap);
+    if (growth_multiplier < 1) {
+        res.status = ERROR;
+        res.val = 0;
+        return res;
+    }
 
-    int* curr_arr = cvec->arr;
-    int* new_arr = malloc(MAX(INT_MAX, new_cap * sizeof(int)));
+    long long new_cap_ll = (long long)cvec->cap * growth_multiplier * GROWTH_FACTOR;
+    // Value is too large to fit in an int
+    if (new_cap_ll > INT_MAX) {
+        res.status = ERROR;
+        res.val = 0;
+        return res;
+    }
+    int new_cap = (int)new_cap_ll;
 
+    int* new_arr = realloc(cvec->arr, new_cap * sizeof(int));
     if (!new_arr) {
         res.status = ERROR;
         res.val = 0;
         return res;
     }
 
-    memcpy(new_arr, curr_arr, cvec->cap * sizeof(int));
-    free(cvec->arr);
     cvec->arr = new_arr;
     cvec->cap = new_cap;
 
@@ -53,8 +64,8 @@ void cvec_free(CVec* cvec) {
 
 Result cvec_push(CVec* cvec, int val) {
     Result res;
-    int target_index = cvec->curr_index;
 
+    int target_index = cvec->curr_index;
     if (target_index < 0) {
         res.status = ERROR;
         res.val = 0;
@@ -77,8 +88,8 @@ Result cvec_push(CVec* cvec, int val) {
 
 Result cvec_pop(CVec* cvec) {
     Result res;
-    int target_index = cvec->curr_index - 1;
 
+    int target_index = cvec->curr_index - 1;
     if (target_index < 0) {
         res.status = ERROR;
         res.val = 0;
@@ -100,8 +111,8 @@ Result cvec_pop(CVec* cvec) {
 
 Result cvec_at(const CVec* cvec, int index) {
     Result res;
-    int last_index = cvec->curr_index - 1;
 
+    int last_index = cvec->curr_index - 1;
     if (index < 0 || index > last_index || index == INT_MAX) {
         res.status = ERROR;
         res.val = 0;
